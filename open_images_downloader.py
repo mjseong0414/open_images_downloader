@@ -212,8 +212,8 @@ if __name__ == '__main__':
 #TODO: filter also based on license type
 
 # write out
-        sub_annotation_file = f"{args.root}/sub-{dataset_type}-annotations-bbox.csv"
-        sub_source_file = f"{args.root}/sub-{dataset_type}-images-boxable-with-rotation.csv"
+        sub_annotation_file = f"{args.root}/sub-{data_name}.csv"
+        sub_source_file = f"{args.root}/sub-{source_name}.csv"
         logging.warning(f"Save {dataset_type} data to {sub_annotation_file}.")
         annotations.to_csv(sub_annotation_file, index=False)
         sources.to_csv(sub_source_file, index=False)
