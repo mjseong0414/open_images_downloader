@@ -250,11 +250,11 @@ def convert_openimages_subset(annotation_dir, image_dir, subset, return_data=Fal
                           Uijlings J., Popov S., Kamali S., Malloci M., Pont-Tuset J., \
                           Veit A., Belongie S., Gomes V., Gupta A., Sun C., Chechik G., \
                           Cai D., Feng Z., Narayanan D., Murphy K.',
-                          'date_announced': '2018/04/30',
-                          'description': 'Open Images Dataset v4',
+                          'date_announced': '2019/05/30',
+                          'description': 'Open Images Dataset v5',
                           'url': 'https://storage.googleapis.com/openimages/web/index.html',
-                          'version': '4.0',
-                          'year': 2018}
+                          'version': '5.0',
+                          'year': 2019}
     
     # Add license information
     print('adding basic license info')
