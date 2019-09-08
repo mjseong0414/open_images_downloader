@@ -1,5 +1,7 @@
-# openimages2coco
-Convert [Open Images](https://storage.googleapis.com/openimages/web/index.html "Open Images Homepage") annotations into [MS Coco](http://cocodataset.org "MS Coco Homepage") format to make it a drop in replacement.
+# open images downloader
+This repo combines the power of openimages2coco with an open images downloader.
+Download a subset of [Open Images](https://storage.googleapis.com/openimages/web/index.html "Open Images Homepage") files based on labels and convert them to [MS Coco](http://cocodataset.org "MS Coco Homepage") annotation format.
+I have to thank the authors of openimages2coco and pytorch-ssd for the base code of this repo.
 
 ### Functionality
 
