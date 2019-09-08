@@ -141,7 +141,7 @@ if __name__ == '__main__':
             source_name = "train-images-boxable-with-rotation"
             folder_data = "2018_04/train/"
             folder_source = "2018_04/train/"
-        elif dataset_type == 'validation':
+        elif dataset_type == 'val':
             data_name = "validation-annotations-bbox"
             source_name = "validation-images-with-rotation"
             folder_data = "v5/"
@@ -217,7 +217,10 @@ if __name__ == '__main__':
         logging.warning(f"Save {dataset_type} data to {sub_annotation_file}.")
         annotations.to_csv(sub_annotation_file, index=False)
         sources.to_csv(sub_source_file, index=False)
-        image_files.extend(f"{dataset_type}/{id}.jpg" for id in set(annotations['ImageID']))
+        folder_type = dataset_type
+        if folder_type == 'validation':
+            folder_type = 'val'
+        image_files.extend(f"{folder_type}/{id}.jpg" for id in set(annotations['ImageID']))
 
 # download images
     logging.warning(f"Start downloading {len(image_files)} images.")

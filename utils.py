@@ -103,7 +103,7 @@ def _convert_image_annotation_chunk(original_image_metadata, image_dir, licenses
         
     return images
 
-def convert_image_annotations(original_image_metadata, image_dir, licenses, mode='parallel', verbose=1):
+def convert_image_annotations(original_image_metadata, image_dir, licenses, mode='', verbose=1):
     # Enclosing function of _convert_image_annotation_chunk to make it parallelizable
     # in parallel mode:
     # verbose: 0 = no status info, 1 = some progress info, 50 = info for every finished chunk
@@ -114,6 +114,7 @@ def convert_image_annotations(original_image_metadata, image_dir, licenses, mode
         # separate original image metadata into chunks
         N = 1000 #chunk size
         chunks = []
+        #TODO: fix bugs here
         for i in range(len(original_image_metadata)//N):
             # add chunks
             start_index = i*N+1
@@ -204,19 +205,19 @@ def convert_instance_annotations(original_annotations, images, categories, start
     return annotations
 
 
-def convert_openimages_subset(annotation_dir, image_dir, subset, return_data=False):
+def convert_openimages_subset(annotation_dir, image_dir, subset, return_data=False, prefix=""):
     
     # Select correct source files for each subset
     category_sourcefile = 'class-descriptions-boxable.csv'
     if subset == 'train':
-        image_sourcefile = 'train-images-boxable-with-rotation.csv'
-        annotation_sourcefile = 'train-annotations-bbox.csv'
+        image_sourcefile = prefix + 'train-images-boxable-with-rotation.csv'
+        annotation_sourcefile = prefix + 'train-annotations-bbox.csv'
     elif subset == 'val':
-        image_sourcefile = 'validation-images-with-rotation.csv'
-        annotation_sourcefile = 'validation-annotations-bbox.csv'
+        image_sourcefile = prefix + 'validation-images-with-rotation.csv'
+        annotation_sourcefile = prefix + 'validation-annotations-bbox.csv'
     elif subset == 'test':
-        image_sourcefile = 'test-images-with-rotation.csv'
-        annotation_sourcefile = 'test-annotations-bbox.csv'
+        image_sourcefile = prefix + 'test-images-with-rotation.csv'
+        annotation_sourcefile = prefix + 'test-annotations-bbox.csv'
     
     # Load original annotations
     print('loading original annotations ...', end='\r')
@@ -291,7 +292,7 @@ def convert_openimages_subset(annotation_dir, image_dir, subset, return_data=Fal
     oi.dataset['images'] = convert_image_annotations(original_image_metadata, 
                                                            image_dir, 
                                                            oi.dataset['licenses'], 
-                                                           mode='parallel', 
+                                                           #mode='parallel',
                                                            verbose=10)
     
     # Convert instance annotations
