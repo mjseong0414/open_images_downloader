@@ -139,7 +139,7 @@ if __name__ == '__main__':
 
         if dataset_type == 'train':
             source_name = 'train-images-with-boxable-with-rotation'
-            folder = '2018_04'
+            folder = '2018_04/train'
         if dataset_type == 'validation':
             source_name = 'validation-images-with-rotation'
             folder = 'v5'
@@ -150,12 +150,12 @@ if __name__ == '__main__':
 
 # download missing files
         if not os.path.exists(annotation_file):
-            url = f"https://storage.googleapis.com/openimages/{folder}/{dataset_type}/{dataset_type}-annotations-bbox.csv"
+            url = f"https://storage.googleapis.com/openimages/{folder}/{dataset_type}-annotations-bbox.csv"
             logging.warning(f"Download {url}.")
             http_download(url, annotation_file)
 
         if not os.path.exists(source_file):
-            url = f"https://storage.googleapis.com/openimages/{folder}/{dataset_type}/{dataset_type}-images-boxable-with-rotation.csv"
+            url = f"https://storage.googleapis.com/openimages/{folder}/{source_name}.csv"
             logging.warning(f"Download {url}.")
             http_download(url, source_file)
 
