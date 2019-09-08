@@ -122,7 +122,6 @@ if __name__ == '__main__':
     class_description_file = os.path.join(args.root, "class-descriptions-boxable.csv")
     if not os.path.exists(class_description_file):
         url = "https://storage.googleapis.com/openimages/v5/class-descriptions-boxable.csv"
-        #url = "https://storage.googleapis.com/openimages/2018_04/class-descriptions-boxable.csv"
         logging.warning(f"Download {url}.")
         http_download(url, class_description_file)
 
@@ -138,24 +137,34 @@ if __name__ == '__main__':
         annotation_file = f"{args.root}/{dataset_type}-annotations-bbox.csv"
 
         if dataset_type == 'train':
-            source_name = 'train-images-with-boxable-with-rotation'
-            folder = '2018_04/train'
-        if dataset_type == 'validation':
-            source_name = 'validation-images-with-rotation'
-            folder = 'v5'
-        if dataset_type == 'test':
-            source_name = 'test-images-with-rotation'
-            folder = 'v5'
+            data_name = "train-annotations-bbox"
+            source_name = "train-images-boxable-with-rotation"
+            folder_data = "2018_04/train/"
+            folder_source = "2018_04/train/"
+        elif dataset_type == 'validation':
+            data_name = "validation-annotations-bbox"
+            source_name = "validation-images-with-rotation"
+            folder_data = "v5/"
+            folder_source = "2018_04/validation/"
+        else:
+            data_name = "test-annotations-bbox"
+            source_name = "test-images-with-rotation"
+            folder_data = "v5/"
+            folder_source = "2018_04/test/"
+
+        download_path = "https://storage.googleapis.com/openimages/"
+        data_path = download_path + folder_data + data_name + ".csv"
+        source_path = download_path + folder_source + source_name + ".csv"
         source_file = f"{args.root}/{source_name}.csv"
 
 # download missing files
         if not os.path.exists(annotation_file):
-            url = f"https://storage.googleapis.com/openimages/{folder}/{dataset_type}-annotations-bbox.csv"
+            url = data_path
             logging.warning(f"Download {url}.")
             http_download(url, annotation_file)
 
         if not os.path.exists(source_file):
-            url = f"https://storage.googleapis.com/openimages/{folder}/{source_name}.csv"
+            url = source_path
             logging.warning(f"Download {url}.")
             http_download(url, source_file)
 
