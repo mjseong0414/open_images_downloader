@@ -24,6 +24,26 @@ ptyhon convert.py -p PATH_TO_OPENIMAGES
 python convert.py -p /media/robert/Daten/DATA/open_images
 ```
 
+### Download subset of data
+
+```bash
+python open_images_downloader.py --root ~/data/open_images --class_names "Handgun,Shotgun" --num_workers 20
+```
+
+It will download data into the folder ~/data/open_images.
+
+The content of the data directory looks as follows.
+
+```
+class-descriptions-boxable.csv       test                        validation
+sub-test-annotations-bbox.csv        test-annotations-bbox.csv   validation-annotations-bbox.csv
+sub-train-annotations-bbox.csv       train
+sub-validation-annotations-bbox.csv  train-annotations-bbox.csv
+```
+
+The folders train, test, validation contain the images. The files like sub-train-annotations-bbox.csv 
+is the annotation file.
+
 ### Output
 
 The generated annotations can be loaded and used with the standard MS Coco tools:
