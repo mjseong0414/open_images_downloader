@@ -118,9 +118,11 @@ if __name__ == '__main__':
                 continue
             excluded_images.add(img_id)
 
+#TODO: add ability to also load segmentable or image level description files
     class_description_file = os.path.join(args.root, "class-descriptions-boxable.csv")
     if not os.path.exists(class_description_file):
-        url = "https://storage.googleapis.com/openimages/2018_04/class-descriptions-boxable.csv"
+        url = "https://storage.googleapis.com/openimages/v5/class-descriptions-boxable.csv"
+        #url = "https://storage.googleapis.com/openimages/2018_04/class-descriptions-boxable.csv"
         logging.warning(f"Download {url}.")
         http_download(url, class_description_file)
 
@@ -134,16 +136,26 @@ if __name__ == '__main__':
         os.makedirs(image_dir, exist_ok=True)
 
         annotation_file = f"{args.root}/{dataset_type}-annotations-bbox.csv"
-        source_file = f"{args.root}/{dataset_type}-images-boxable-with-rotation.csv"
-	
+
+        if dataset_type == 'train':
+            source_name = 'train-images-with-boxable-with-rotation'
+            folder = '2018_04'
+        if dataset_type == 'validation':
+            source_name = 'validation-images-with-rotation'
+            folder = 'v5'
+        if dataset_type == 'test':
+            source_name = 'test-images-with-rotation'
+            folder = 'v5'
+        source_file = f"{args.root}/{source_name}.csv"
+
 # download missing files
         if not os.path.exists(annotation_file):
-            url = f"https://storage.googleapis.com/openimages/2018_04/{dataset_type}/{dataset_type}-annotations-bbox.csv"
+            url = f"https://storage.googleapis.com/openimages/{folder}/{dataset_type}/{dataset_type}-annotations-bbox.csv"
             logging.warning(f"Download {url}.")
             http_download(url, annotation_file)
 
         if not os.path.exists(source_file):
-            url = f"https://storage.googleapis.com/openimages/2018_04/{dataset_type}/{dataset_type}-images-boxable-with-rotation.csv"
+            url = f"https://storage.googleapis.com/openimages/{folder}/{dataset_type}/{dataset_type}-images-boxable-with-rotation.csv"
             logging.warning(f"Download {url}.")
             http_download(url, source_file)
 
@@ -186,7 +198,7 @@ if __name__ == '__main__':
 # extract image source descriptions based on filtered annotations
         logging.warning(f"Read source file {source_file}")
         sources = pd.read_csv(source_file)
-        sources = sources.loc[(annotations['ImageID'].isin(set(annotations['ImageID'])), :]
+        sources = sources.loc[(sources['ImageID'].isin(set(annotations['ImageID']))), :]
 
 #TODO: filter also based on license type
 

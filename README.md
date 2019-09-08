@@ -7,7 +7,28 @@ I have to thank the authors of openimages2coco and pytorch-ssd for the base code
 
 This conversion routine will load the original .csv annotation files form Open Images, convert the annotations into the list/dict based format of [MS Coco annotations](http://cocodataset.org/#format-data) and store them as a .json file in the same folder.
 
-### Usage
+
+### Download subset of data with bounding boxes
+
+```bash
+python open_images_downloader.py --root /media/robert/Daten/DATA/open_images --class_names "Vehicle registration plate, Traffic light, Traffic sign" --num_workers 20
+```
+
+It will download data into the folder ~/data/open_images.
+
+The content of the data directory looks as follows.
+
+```
+class-descriptions-boxable.csv       test                        validation
+sub-test-annotations-bbox.csv        test-annotations-bbox.csv   validation-annotations-bbox.csv
+sub-train-annotations-bbox.csv       train
+sub-validation-annotations-bbox.csv  train-annotations-bbox.csv
+```
+
+The folders train, test, validation contain the images. The files like sub-train-annotations-bbox.csv 
+is the annotation file.
+
+### conversion
 
 Download the CocoAPI from https://github.com/cocodataset/cocoapi \
 Install Coco API:
@@ -25,26 +46,6 @@ Run conversion:
 ptyhon convert.py -p PATH_TO_OPENIMAGES
 python convert.py -p /media/robert/Daten/DATA/open_images
 ```
-
-### Download subset of data
-
-```bash
-python open_images_downloader.py --root ~/data/open_images --class_names "Handgun,Shotgun" --num_workers 20
-```
-
-It will download data into the folder ~/data/open_images.
-
-The content of the data directory looks as follows.
-
-```
-class-descriptions-boxable.csv       test                        validation
-sub-test-annotations-bbox.csv        test-annotations-bbox.csv   validation-annotations-bbox.csv
-sub-train-annotations-bbox.csv       train
-sub-validation-annotations-bbox.csv  train-annotations-bbox.csv
-```
-
-The folders train, test, validation contain the images. The files like sub-train-annotations-bbox.csv 
-is the annotation file.
 
 ### Output
 
