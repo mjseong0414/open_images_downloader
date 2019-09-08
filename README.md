@@ -11,7 +11,7 @@ This conversion routine will load the original .csv annotation files form Open I
 ### Download subset of data with bounding boxes
 
 ```bash
-python open_images_downloader.py --root /media/robert/Daten/DATA/open_images --class_names "Vehicle registration plate, Traffic light, Traffic sign" --num_workers 20
+python open_images_downloader.py --root /media/robert/Daten/DATA/OI/face_plate --class_names "Vehicle registration plate, Traffic sign, Human face, Street light" --num_workers 20
 ```
 
 It will download data into the folder ~/data/open_images.
@@ -44,7 +44,7 @@ Download Open Images from https://storage.googleapis.com/openimages/web/download
 Run conversion:
 ```
 ptyhon convert.py -p PATH_TO_OPENIMAGES
-python convert.py -p /media/robert/Daten/DATA/open_images
+python convert.py -p /media/robert/Daten/DATA/OI/face_plate
 ```
 
 ### Output
