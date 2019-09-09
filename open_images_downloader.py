@@ -82,6 +82,8 @@ def parse_args():
                         help="This file specifies the image ids you want to exclude.")
     parser.add_argument('--remove_overlapped', action='store_true',
                         help="Remove single boxes covered by group boxes.")
+    parser.add_argument('--min_set', default=None, type=str, help="set of objects (OR) that also need to be present in an image to be downloaded")
+    parser.add_argument("--diversity", action="store_true", help="At least one additional ojbect class (from min set) needs to be present in image")
     return parser.parse_args()
 
 
@@ -106,6 +108,17 @@ if __name__ == '__main__':
             percentages.append(float(t[2].strip()))
         else:
             percentages.append(1.0)
+    
+    # construct min set name list
+    if args.min_set is not None:
+        min_set_class_names = []
+        min_set_names = [e.strip() for e in args.min_set.split(",")]
+        for name in min_set_names:
+            t = name.split(":")
+            min_set_class_names.append(t[0].strip())
+    else:
+        min_set_class_names = class_names
+
 
     if not os.path.exists(args.root):
         os.makedirs(args.root)
@@ -128,6 +141,10 @@ if __name__ == '__main__':
     class_descriptions = pd.read_csv(class_description_file,
                                     names=["id", "ClassName"])
     class_descriptions = class_descriptions[class_descriptions['ClassName'].isin(class_names)]
+    
+    min_set_class_descriptions = pd.read_csv(class_description_file,
+                                    names=["id", "ClassName"])
+    min_set_class_descriptions = min_set_class_descriptions[min_set_class_descriptions['ClassName'].isin(min_set_class_names)]
 
     image_files = []
     for dataset_type in ["train", "validation", "test"]:
@@ -174,9 +191,12 @@ if __name__ == '__main__':
         annotations = pd.merge(annotations, class_descriptions,
                                left_on="LabelName", right_on="id",
                                how="inner")
+                               
+        # filter depictions
         if not args.include_depiction:
             annotations = annotations.loc[annotations['IsDepiction'] != 1, :]
-
+        
+        # filter object groups
         filtered = []
         for class_name, group_filter, percentage in zip(class_names, group_filters, percentages):
             sub = annotations.loc[annotations['ClassName'] == class_name, :]
@@ -189,12 +209,29 @@ if __name__ == '__main__':
             filtered.append(sub)
 
         annotations = pd.concat(filtered)
+        #filter by exclusion list
         annotations = annotations.loc[~annotations['ImageID'].isin(excluded_images), :]
-
+        
+        #filter single boxes covered by group boxes
         if args.remove_overlapped:
             images_with_group = annotations.loc[annotations['IsGroupOf'] == 1, 'ImageID']
             annotations = annotations.loc[~(annotations['ImageID'].isin(set(images_with_group)) & (annotations['IsGroupOf'] == 0)), :]
-        annotations = annotations.sample(frac=1.0)
+        
+        #filter images with insufficient object diversity
+        if args.diversity:
+            # all images that contain min 2 classes of which at least one from min_set
+            IDs = annotations.loc[annotations['ClassName'].isin(set(min_set_class_names)), 'ImageID']
+            annotations = annotations.loc[(annotations['ImageID'].isin(set(IDs)))]
+            
+            counter = annotations[['ImageID', 'ClassName']]
+            counter = counter.drop_duplicates()
+            IDs = counter['ImageID'].value_counts()
+            print(len(IDs))
+            IDs = IDs.loc[(IDs > 1)].index.values
+            print(len(IDs))
+            annotations = annotations.loc[(annotations['ImageID'].isin(set(IDs)))]
+      
+        #annotations = annotations.sample(frac=1.0)
 
         logging.warning(f"{dataset_type} bounding boxes size: {annotations.shape[0]}")
         logging.warning("Approximate Image Stats: ")
@@ -209,7 +246,7 @@ if __name__ == '__main__':
         sources = pd.read_csv(source_file)
         sources = sources.loc[(sources['ImageID'].isin(set(annotations['ImageID']))), :]
 
-#TODO: filter also based on license type
+#TODO: filter also license types
 
 # write out
         sub_annotation_file = f"{args.root}/sub-{data_name}.csv"
@@ -218,8 +255,8 @@ if __name__ == '__main__':
         annotations.to_csv(sub_annotation_file, index=False)
         sources.to_csv(sub_source_file, index=False)
         folder_type = dataset_type
-        if folder_type == 'validation':
-            folder_type = 'val'
+        #if folder_type == 'validation':
+            #folder_type = 'val'
         image_files.extend(f"{folder_type}/{id}.jpg" for id in set(annotations['ImageID']))
 
 # download images
