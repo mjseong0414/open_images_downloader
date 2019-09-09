@@ -210,13 +210,13 @@ def convert_openimages_subset(annotation_dir, image_dir, subset, return_data=Fal
     # Select correct source files for each subset
     category_sourcefile = 'class-descriptions-boxable.csv'
     if subset == 'train':
-        image_sourcefile = prefix + 'train-images-boxable-with-rotation.csv'
+        image_sourcefile = 'train-images-boxable-with-rotation.csv'
         annotation_sourcefile = prefix + 'train-annotations-bbox.csv'
     elif subset == 'val':
-        image_sourcefile = prefix + 'validation-images-with-rotation.csv'
+        image_sourcefile = 'validation-images-with-rotation.csv'
         annotation_sourcefile = prefix + 'validation-annotations-bbox.csv'
     elif subset == 'test':
-        image_sourcefile = prefix + 'test-images-with-rotation.csv'
+        image_sourcefile = 'test-images-with-rotation.csv'
         annotation_sourcefile = prefix + 'test-annotations-bbox.csv'
     
     # Load original annotations
