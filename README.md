@@ -1,3 +1,5 @@
+download google Open Image dataset each images and each annotation. And convert to CoCo format.
+
 # open images downloader
 This repo combines the power of openimages2coco with an open images downloader.
 Download a subset of [Open Images](https://storage.googleapis.com/openimages/web/index.html "Open Images Homepage") files based on labels and convert them to [MS Coco](http://cocodataset.org "MS Coco Homepage") annotation format.
